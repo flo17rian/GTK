@@ -14,13 +14,17 @@ struct elemente
 	GtkWidget *Button;		//Zum Vokabeltrainer
 	GtkWidget *Button1;		//Vokabelliste bearbeiten
 	GtkWidget *Button2;		//Programm beenden
-	GtkWidget *Button3;		//Testbutton des 2. Menues
+	GtkWidget *Button3;
 	GtkWidget *Button4;
 
 	int zust;
 }element;
 
-
+void destroy(GtkWidget *Button)
+{
+	gtk_widget_destroy(element.Fenster1);				//das Fenster des zweiten Menüs wird zerstört
+	gtk_widget_show(element.Fenster);				//das hauptmenü wird wieder sichtbar gemacht
+}
 
 //++++++++++++++++++++++++++++Funktion der Unterprogramme++++++++++++++++++++++++++++++++++
 //----------------------------Vokabeltrainer wird zum üben geöffnet------------------------
@@ -32,22 +36,20 @@ void vokabel(GtkWidget *Button)
 
 
 //----------------------------Vokabelliste wird zum ändern geöffnegt-----------------------
-void liste(GtkWidget *Button1, gpointer data)
+void liste(GtkWidget *Button1)
 {
-	element.zust=1;
+gtk_widget_hide_on_delete(element.Fenster);				//Hauptmenue verbergen
 
-	printf("%i\n",element.zust);
-
-//+++++++++++++++++++++++++Test fenster um das Verschwinden des Hautptfensters/menues zu testen+++++++++
+//Test Zeilen von 41 bis 48(damit was angezeigt wird)
 element.Fenster1 = gtk_window_new (GTK_WINDOW_TOPLEVEL); 
 element.Schachtel1 = gtk_box_new(TRUE,2);
-element.Button3 = gtk_button_new_with_mnemonic("Programm beenden");
+element.Button3 = gtk_button_new_with_mnemonic("Zurück zum Hauptmenü");
 //-----
 gtk_container_add(GTK_CONTAINER(element.Fenster1), element.Schachtel1);
 
-gtk_box_pack_start(GTK_BOX(element.Schachtel1),element.Button3, TRUE, FALSE,2);
+gtk_box_pack_start(GTK_BOX(element.Schachtel1),element.Button3, TRUE, FALSE,2);		
 
-g_signal_connect(G_OBJECT(element.Button3),"clicked",gtk_main_quit, NULL);	//hier soll zurück in main gegangen werden später
+g_signal_connect(G_OBJECT(element.Button3),"clicked",G_CALLBACK(destroy), NULL);	//Funktion destroy wird aufgerufen
 //----
 gtk_window_set_title (GTK_WINDOW(element.Fenster1), "Vokabelliste");
 gtk_window_set_default_size(GTK_WINDOW(element.Fenster1),500,400);
@@ -59,8 +61,8 @@ gtk_widget_show_all (element.Fenster1);
 //+++++++++++++++++++++++++++++++HAUPTMENUE+++++++++++++++++++++++++++++++++++++++++++++++++
 int main(int argc, char *argv[])
 {
-gtk_init(&argc,&argv);
 
+gtk_init(&argc,&argv);
 //+++++++++++++++++++++++++++++++Definierung der Objekte+++++++++++++++++++++++++++++++++++++
 element.Fenster = gtk_window_new (GTK_WINDOW_TOPLEVEL); 		//Fenster erstellen
 element.Schachtel = gtk_box_new(TRUE,2);				//erstellen eines Schachtelbausteins um mehrere Widgets in ein Fenster einzubinden
@@ -89,22 +91,4 @@ gtk_main();
 return 0;
 }
 
-
-
-/*if(element.zust==1)
-{
-element.Fenster1 = gtk_window_new (GTK_WINDOW_TOPLEVEL); 
-element.Schachtel1 = gtk_box_new(TRUE,2);
-element.Button3 = gtk_button_new_with_mnemonic("Programm beenden");
-//-----
-gtk_container_add(GTK_CONTAINER(element.Fenster1), element.Schachtel1);
-
-gtk_box_pack_start(GTK_BOX(element.Schachtel1),element.Button3, TRUE, FALSE,2);
-
-g_signal_connect(G_OBJECT(element.Button3),"clicked",gtk_main_quit, NULL);
-//----
-gtk_widget_show_all (element.Fenster1);
-
-}
-*/
 //G_Callback : main
